@@ -98,7 +98,9 @@ export const MaskHeadline: React.FC<{
     as,
     { ref, className: `mask-head ${state} ${className}`.trim() },
     lines.map((line, li) => (
-      <span className={`mask-head__line ${accentLast && li === lines.length - 1 ? 'mask-head__line--accent' : ''}`} key={li}>
+      <React.Fragment key={li}>
+      {li > 0 && ' '}
+      <span className={`mask-head__line ${accentLast && li === lines.length - 1 ? 'mask-head__line--accent' : ''}`}>
         {line.split(' ').map((word, wi) => {
           const i = wordIndex++;
           return (
@@ -111,6 +113,7 @@ export const MaskHeadline: React.FC<{
           );
         })}
       </span>
+      </React.Fragment>
     ))
   );
 };
