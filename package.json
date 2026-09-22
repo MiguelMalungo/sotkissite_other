@@ -2,7 +2,7 @@
   "name": "sotkis-website",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://miguelmalungo.github.io/sotkissite/",
+  "homepage": "https://miguelmalungo.github.io/sotkissite_other/",
   "type": "module",
   "scripts": {
     "dev": "vite",

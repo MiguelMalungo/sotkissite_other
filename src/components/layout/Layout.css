@@ -1,9 +1,3 @@
-.layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.layout__main {
-  flex: 1;
-}
+.layout { min-height: 100vh; display: flex; flex-direction: column; background: var(--paper); }
+.layout__main { flex: 1; animation: page-in 0.8s var(--ease-out); }
+@keyframes page-in { from { opacity: 0; } }

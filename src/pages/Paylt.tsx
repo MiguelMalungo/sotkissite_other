@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { SEO } from '../components/common/SEO';
 import { seoConfig } from '../utils/seoConfig';
-import { FeatureCarousel } from '../components/ui/FeatureCarousel';
-import { AnimateOnScroll } from '../components/ui/AnimateOnScroll';
 import { useLanguage } from '../contexts/LanguageContext';
 import { payltTranslations } from '../translations/paylt';
-import payltHeroImage from '../assets/SFS06471-copy.webp';
-
-import logoPlayt from '../assets/logo-playtW.png';
-import playtContentoresImg from '../assets/playt-contentores.webp';
+import { Eyebrow } from '../components/ds/Btn';
+import { MaskHeadline, Reveal } from '../components/ds/Reveal';
+import { FeatureTabs, Intro, PageHero } from '../components/ds/Blocks';
+import { VideoModal } from '../components/ds/Overlays';
+import heroImage from '../assets/SFS06471-copy.webp';
+import logoPlaytW from '../assets/logo-playtW.png';
+import containersImg from '../assets/playt-contentores.webp';
 import iconAccessBag from '../assets/icon-1.webp';
 import iconDrsGlass from '../assets/icon-2.webp';
 import iconDrsPlastic from '../assets/icon-4.webp';
@@ -17,308 +18,157 @@ import iconAccessOrganic from '../assets/icon-4-1.webp';
 import iconConectar from '../assets/conectar.webp';
 import iconFatura from '../assets/fatura.webp';
 import iconPontos from '../assets/pontos.webp';
-import iconPrize from '../assets/prize.webp';
-
-import softDashImg from '../assets/Software_DashboardsInterativos.mp4';
-import softAppImg from '../assets/Software_AplicacaoCidadao.webp';
-import softMarketImg from '../assets/Software_marketplace-video.mp4';
-import hardIotImg from '../assets/Hardware_sensoresnivel.mp4';
-import hardAccessImg from '../assets/Hardware_controlosAcesso2.webp';
-import hardRestrictorImg from '../assets/Hardware_retritorVolume.webp';
-import hardDrsImg from '../assets/Hardware_sensoresDeteção.webp';
-import techPolicyImg from '../assets/Software_PLAYT.webp';
-import benefitMunicipioImg from '../assets/municipios-parallax.webp';
-import benefitCidadaoImg from '../assets/Cidadao_Beneficios.webp';
+import softDash from '../assets/Software_DashboardsInterativos.mp4';
+import softApp from '../assets/Software_AplicacaoCidadao.webp';
+import softMarket from '../assets/Software_marketplace-video.mp4';
+import softPolicy from '../assets/Software_PLAYT.webp';
+import hardIot from '../assets/Hardware_sensoresnivel.mp4';
+import hardAccess from '../assets/Hardware_controlosAcesso2.webp';
+import hardRestrictor from '../assets/Hardware_retritorVolume.webp';
+import hardDrs from '../assets/Hardware_sensoresDeteção.webp';
+import benefitMunicipio from '../assets/municipios-parallax.webp';
+import benefitCidadao from '../assets/Cidadao_Beneficios.webp';
 import './Paylt.css';
+
+/* Copy that previously lived hard-coded in Portuguese */
+const LOCAL: Record<string, { eco: string; how: string }> = {
+  pt: { eco: 'Todas as soluções SOTKIS num único ecossistema', how: 'Como Funciona' },
+  en: { eco: 'All SOTKIS solutions in a single ecosystem', how: 'How it works' },
+  es: { eco: 'Todas las soluciones SOTKIS en un único ecosistema', how: 'Cómo funciona' },
+  fr: { eco: 'Toutes les solutions SOTKIS dans un seul écosystème', how: 'Comment ça marche' },
+  gr: { eco: 'Όλες οι λύσεις SOTKIS σε ένα ενιαίο οικοσύστημα', how: 'Πώς λειτουργεί' },
+  cr: { eco: 'Sva SOTKIS rješenja u jedinstvenom ekosustavu', how: 'Kako funkcionira' },
+};
+
+type Scheme = {
+  billingTitle: string; billingHighlight: string; billingDetail: string;
+  pointsTitle: string; pointsHighlight: string; pointsDetail1: string; pointsDetail2: string;
+  openingHighlight: string; openingDetail1: string; openingDetail2: string;
+};
+type Feat = { label: string; description: string };
 
 export const Paylt: React.FC = () => {
   const { language } = useLanguage();
   const t = payltTranslations[language];
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
-  const closeVideoModal = () => {
-    setIsVideoModalOpen(false);
+  const tx = t as unknown as {
+    scheme: Scheme;
+    contentores?: { title: string };
+    software: { title: string; subtitle: string; features: Feat[] };
+    hardware: { title: string; subtitle: string; features: Feat[] };
+    benefits: { title: string; features: Feat[] };
+    video?: { button: string };
+    intro: { title: string; text1: string; text2?: string; text3?: string };
   };
+  const L = LOCAL[language] ?? LOCAL.en;
+  const s = tx.scheme;
+  const [video, setVideo] = useState(false);
 
-  const tAny = t as any;
+  const billingMain = s.billingDetail.split('(')[0].trim();
+  const billingSub = s.billingDetail.includes('(') ? `(${s.billingDetail.split('(')[1]}` : '';
 
-  // Software Carousel Features — order: Cidadão (image), Dashboard (video), Marketplace (video), PAYT (photo)
-  const softwareFeatures = [
-    { id: '1', label: tAny.software.features[1].label, description: tAny.software.features[1].description, image: softAppImg, isVideo: false },
-    { id: '2', label: tAny.software.features[0].label, description: tAny.software.features[0].description, image: softDashImg, isVideo: true },
-    { id: '3', label: tAny.software.features[2].label, description: tAny.software.features[2].description, image: softMarketImg, isVideo: true },
-    { id: '4', label: tAny.software.features[3].label, description: tAny.software.features[3].description, image: techPolicyImg, isVideo: false },
+  const cols = [
+    { icon: iconAccessBag, label: 'ACCESS', note: 'c/restritor de volume', detail: billingMain, sub: billingSub, group: 'bill' },
+    { icon: iconDrsGlass, label: 'DRS', detail: s.pointsDetail1, group: 'pack' },
+    { icon: iconDrsPlastic, label: 'DRS', detail: s.pointsDetail2, group: 'pack' },
+    { icon: iconAccessPaper, label: 'ACCESS', detail: s.openingDetail1, group: 'open' },
+    { icon: iconAccessOrganic, label: 'ACCESS', detail: s.openingDetail2, group: 'open' },
   ];
 
-  // Hardware Carousel Features
-  const hardwareImages = [hardIotImg, hardAccessImg, hardRestrictorImg, hardDrsImg];
-  const hardwareFeatures = tAny.hardware.features.map((f: { label: string; description: string }, i: number) => ({
-    id: String(i + 1),
-    label: f.label,
-    description: f.description,
-    image: hardwareImages[i],
-    isVideo: i === 0
-  }));
-
-  // Benefits Features — independent imports so changes to software/dashboards don't leak here
-  const benefitsImages = [benefitMunicipioImg, benefitCidadaoImg];
-  const benefitsFeatures = tAny.benefits.features.map((f: { label: string; description: string }, i: number) => ({
-    id: String(i + 1),
-    label: f.label,
-    description: f.description,
-    image: benefitsImages[i]
-  }));
+  const sw = tx.software.features;
+  const softwareFeatures = [
+    { label: sw[1].label, description: sw[1].description, media: softApp },
+    { label: sw[0].label, description: sw[0].description, media: softDash, isVideo: true },
+    { label: sw[2].label, description: sw[2].description, media: softMarket, isVideo: true },
+    { label: sw[3].label, description: sw[3].description, media: softPolicy },
+  ];
+  const hardwareMedia = [hardIot, hardAccess, hardRestrictor, hardDrs];
+  const hardwareFeatures = tx.hardware.features.map((f, i) => ({ ...f, media: hardwareMedia[i], isVideo: i === 0 }));
+  const benefitsMedia = [benefitMunicipio, benefitCidadao];
+  const benefitsFeatures = tx.benefits.features.map((f, i) => ({ ...f, media: benefitsMedia[i] }));
 
   return (
     <div className="paylt">
       <SEO {...seoConfig.paylt} lang={language === 'pt' ? 'pt' : 'en'} />
-      <section className="paylt__hero paylt__hero--simple">
-        <img
-          src={payltHeroImage}
-          alt="SOTKIS Paylt"
-          className="paylt__hero-image"
-        />
-        <div className="paylt__hero-overlay"></div>
-        <div className="paylt__hero-content container">
-          <div className="paylt__hero-text-content">
-            <div className="paylt__hero-scheme" aria-label="SOTKIS ecosystem">
-              <div className="paylt__hero-scheme-items">
-                <div className="paylt__hero-scheme-pill">Hardware</div>
-                <span className="paylt__hero-scheme-plus">+</span>
-                <div className="paylt__hero-scheme-pill">Software</div>
-                <span className="paylt__hero-scheme-plus">+</span>
-                <div className="paylt__hero-scheme-pill paylt__hero-scheme-pill--dark">App Cidadão</div>
-              </div>
-              <div className="paylt__hero-scheme-arrow">
-                <svg width="40" height="2" viewBox="0 0 40 2" fill="none">
-                  <line x1="0" y1="1" x2="40" y2="1" stroke="#94C11F" strokeWidth="2" />
-                </svg>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M0 0L10 5L0 10V0Z" fill="#94C11F" />
-                </svg>
-              </div>
-              <div className="paylt__hero-scheme-logo">
-                <img src={logoPlayt} alt="P(L)AYT" />
-              </div>
-            </div>
-            <h2 className="paylt__scheme-heading paylt__scheme-heading--hero">
-              Todas as soluções <span className="paylt__scheme-heading-pill">SOTKIS</span> num único ecossistema
-            </h2>
-            <button className="paylt__hero-button" onClick={() => setIsVideoModalOpen(true)}>
-              <span>{tAny.video?.button || 'Play Video'}</span>
-              <div className="paylt__hero-button-icon">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </button>
-          </div>
+
+      <PageHero
+        image={heroImage}
+        eyebrow="Pay Less As You Throw"
+        code="SOTKIS · PLAYT"
+        title={`P(L)AYT\n${L.eco}`}
+        onPlay={() => setVideo(true)}
+        playLabel={tx.video?.button || 'Play Video'}
+      >
+        <div className="pl-eq" aria-label="Hardware + Software + App Cidadão → P(L)AYT">
+          <span>Hardware</span>
+          <i>+</i>
+          <span>Software</span>
+          <i>+</i>
+          <span className="pl-eq__dark">App Cidadão</span>
+          <i className="pl-eq__arrow">→</i>
+          <img src={logoPlaytW} alt="P(L)AYT" />
         </div>
-      </section>
+      </PageHero>
 
+      <Intro index="01" eyebrow="Sotkis P(L)AYT" title={tx.intro.title} paragraphs={[tx.intro.text1, tx.intro.text2, tx.intro.text3]} />
 
-      <section className="paylt__intro section">
+      {/* ---------------- HOW IT WORKS SCHEME ---------------- */}
+      <section className="scheme">
         <div className="container">
-          <div className="paylt__intro-content">
-            <AnimateOnScroll animation="fadeSlideUp" delay={0} duration={0.8}>
-              <h2>{t.intro.title}</h2>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="fadeSlideUp" delay={150} duration={0.8}>
-              <p>
-                {t.intro.text1}
-              </p>
-            </AnimateOnScroll>
-            {t.intro.text2 && (
-              <AnimateOnScroll animation="fadeSlideUp" delay={300} duration={0.8}>
-                <p>{t.intro.text2}</p>
-              </AnimateOnScroll>
-            )}
-            <AnimateOnScroll animation="fadeSlideUp" delay={450} duration={0.8}>
-              <p>
-                {t.intro.text3}
-              </p>
-            </AnimateOnScroll>
+          <div className="scheme__head">
+            <Reveal><Eyebrow index="02">{L.how}</Eyebrow></Reveal>
+            <MaskHeadline text={tx.contentores?.title || ''} className="scheme__title" />
           </div>
-        </div>
-      </section>
 
-
-      {/* Como Funciona Section */}
-      <section className="paylt__how-it-works-section paylt__how-it-works-section--rebuilt section">
-        <div className="container">
-          <AnimateOnScroll animation="fadeSlideUp" delay={0} duration={0.8}>
-            <h2 className="paylt__section-title">Uma solução para todo o tipo de contentores!</h2>
-          </AnimateOnScroll>
-
-          <AnimateOnScroll animation="fadeSlideUp" delay={100} duration={0.8}>
-            <div className="paylt__rebuilt">
-              {/* Como Funciona pill */}
-              <div className="paylt__rebuilt-badge">Como Funciona</div>
-
-              {/* Two top headers: Faturação / Pontos */}
-              <div className="paylt__rebuilt-header">
-                <div className="paylt__rebuilt-header-col">
-                  <div className="paylt__rebuilt-header-icon">
-                    <img src={iconFatura} alt="" />
-                  </div>
-                  <div className="paylt__rebuilt-header-text">
-                    <strong>{t.scheme.billingTitle.split(' ').slice(0, 3).join(' ')}</strong>
-                    <span>{t.scheme.billingTitle.split(' ').slice(3).join(' ')}</span>
-                  </div>
-                </div>
-                <div className="paylt__rebuilt-header-col">
-                  <div className="paylt__rebuilt-header-icon">
-                    <img src={iconPontos} alt="" />
-                  </div>
-                  <div className="paylt__rebuilt-header-text">
-                    <strong>{t.scheme.pointsTitle}</strong>
-                  </div>
-                </div>
+          <Reveal className="scheme__board" variant="up">
+            {/* Group headers */}
+            <div className="scheme__groups">
+              <div className="scheme__group scheme__group--bill">
+                <img src={iconFatura} alt="" />
+                <span>{s.billingTitle}</span>
               </div>
-
-              {/* Three highlight pills */}
-              <div className="paylt__rebuilt-pills">
-                <div className="paylt__rebuilt-pill-wrap">
-                  <div className="paylt__rebuilt-pill">{t.scheme.billingHighlight}</div>
-                </div>
-                <div className="paylt__rebuilt-pill-wrap">
-                  <img src={iconPrize} alt="" className="paylt__rebuilt-trophy" aria-hidden="true" />
-                  <div className="paylt__rebuilt-pill">{t.scheme.pointsHighlight}</div>
-                </div>
-                <div className="paylt__rebuilt-pill-wrap">
-                  <img src={iconPrize} alt="" className="paylt__rebuilt-trophy" aria-hidden="true" />
-                  <div className="paylt__rebuilt-pill">{t.scheme.openingHighlight}</div>
-                </div>
-              </div>
-
-              {/* 5-column details grid */}
-              <div className="paylt__rebuilt-details">
-                <div className="paylt__rebuilt-detail">
-                  <p><strong>{t.scheme.billingDetail.split('(')[0].trim()}</strong></p>
-                  {t.scheme.billingDetail.includes('(') && (
-                    <p className="paylt__rebuilt-detail-sub">({t.scheme.billingDetail.split('(')[1]}</p>
-                  )}
-                </div>
-                <div className="paylt__rebuilt-detail">
-                  <p><strong>Pontos</strong> por deposição individual de embalagens <strong>de vidro</strong></p>
-                </div>
-                <div className="paylt__rebuilt-detail">
-                  <p><strong>Pontos</strong> por deposição individual de embalagens de <strong>plástico e metal</strong></p>
-                </div>
-                <div className="paylt__rebuilt-detail">
-                  <p><strong>Pontos</strong> por abertura para depósito de <strong>papel e cartão</strong></p>
-                </div>
-                <div className="paylt__rebuilt-detail">
-                  <p><strong>Pontos</strong> por abertura para depósito de <strong>resíduos orgânicos</strong></p>
-                </div>
-              </div>
-
-              {/* Icon labels row */}
-              <div className="paylt__rebuilt-icons">
-                <div className="paylt__rebuilt-icon-col">
-                  <div className="paylt__rebuilt-icon">
-                    <img src={iconAccessBag} alt="" />
-                  </div>
-                  <p className="paylt__rebuilt-icon-label">SOTKIS <strong>ACCESS</strong></p>
-                  <p className="paylt__rebuilt-icon-sub">c/restritor de volume</p>
-                </div>
-                <div className="paylt__rebuilt-icon-col">
-                  <div className="paylt__rebuilt-icon">
-                    <img src={iconDrsGlass} alt="" />
-                  </div>
-                  <p className="paylt__rebuilt-icon-label">SOTKIS <strong>DRS</strong></p>
-                </div>
-                <div className="paylt__rebuilt-icon-col">
-                  <div className="paylt__rebuilt-icon">
-                    <img src={iconDrsPlastic} alt="" />
-                  </div>
-                  <p className="paylt__rebuilt-icon-label">SOTKIS <strong>DRS</strong></p>
-                </div>
-                <div className="paylt__rebuilt-icon-col">
-                  <div className="paylt__rebuilt-icon">
-                    <img src={iconAccessPaper} alt="" />
-                  </div>
-                  <p className="paylt__rebuilt-icon-label">SOTKIS <strong>ACCESS</strong></p>
-                </div>
-                <div className="paylt__rebuilt-icon-col">
-                  <div className="paylt__rebuilt-icon">
-                    <img src={iconAccessOrganic} alt="" />
-                  </div>
-                  <p className="paylt__rebuilt-icon-label">SOTKIS <strong>ACCESS</strong></p>
-                </div>
-                <div className="paylt__rebuilt-icon-col paylt__rebuilt-icon-col--access-methods">
-                  <img src={iconConectar} alt="Identificação RFID e Bluetooth" className="paylt__rebuilt-conectar" />
-                </div>
-              </div>
-
-              {/* Containers illustration — reused existing asset */}
-              <div className="paylt__rebuilt-containers">
-                <img src={playtContentoresImg} alt="Contentores P(L)AYT" />
+              <div className="scheme__group scheme__group--pts">
+                <img src={iconPontos} alt="" />
+                <span>{s.pointsTitle}</span>
               </div>
             </div>
-          </AnimateOnScroll>
-        </div>
-      </section>
 
-      {/* Componentes da Solução Section */}
-      <section className="paylt__componentes-section">
-        {/* Benefits Carousel */}
-        <FeatureCarousel
-          title={tAny.benefits.title}
-          features={benefitsFeatures}
-          imagePosition="right"
-          backgroundColor="#F4FBFC"
-          variant="full-background"
-        />
-
-        {/* Hardware Carousel */}
-        <FeatureCarousel
-          title={tAny.hardware.title}
-          subtitle={tAny.hardware.subtitle}
-          features={hardwareFeatures}
-          imagePosition="left"
-          backgroundColor="#F4FBFC"
-          variant="full-background"
-        />
-
-        {/* Software Carousel */}
-        <FeatureCarousel
-          title={tAny.software.title}
-          subtitle={tAny.software.subtitle}
-          features={softwareFeatures}
-          imagePosition="right"
-          backgroundColor="#F4FBFC"
-          variant="full-background"
-        />
-      </section>
-
-      
-
-      {/* Video Modal */}
-      {isVideoModalOpen && (
-        <div className="paylt__video-modal" onClick={closeVideoModal}>
-          <div className="paylt__video-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="paylt__video-modal-close" onClick={closeVideoModal} aria-label="Close video">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            <div className="paylt__video-modal-iframe-wrapper">
-              <iframe
-                width="853"
-                height="480"
-                src="https://www.youtube.com/embed/M0Gr6pVUz4E?controls=1&rel=0&modestbranding=1"
-                title="SOTKON Intelligent Systems - We present Sotkis"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                className="paylt__video-modal-iframe"
-              ></iframe>
+            {/* Rules */}
+            <div className="scheme__rules">
+              <div className="scheme__rule scheme__rule--bill">{s.billingHighlight}</div>
+              <div className="scheme__rule scheme__rule--pack">{s.pointsHighlight}</div>
+              <div className="scheme__rule scheme__rule--open">{s.openingHighlight}</div>
             </div>
-          </div>
+
+            {/* Columns */}
+            <div className="scheme__cols">
+              {cols.map((c, i) => (
+                <div key={i} className={`scheme__col scheme__col--${c.group}`}>
+                  <div className="scheme__icon"><img src={c.icon} alt="" /></div>
+                  <p className="scheme__device">SOTKIS <strong>{c.label}</strong></p>
+                  {c.note && <p className="scheme__note">{c.note}</p>}
+                  <p className="scheme__detail">{c.detail}</p>
+                  {c.sub && <p className="scheme__sub">{c.sub}</p>}
+                </div>
+              ))}
+            </div>
+
+            <div className="scheme__foot">
+              <img src={iconConectar} alt="RFID & Bluetooth" className="scheme__conectar" />
+              <span>RFID · Bluetooth</span>
+            </div>
+          </Reveal>
+
+          <Reveal className="scheme__containers" variant="clip">
+            <img src={containersImg} alt="Contentores P(L)AYT" loading="lazy" />
+          </Reveal>
         </div>
-      )}
+      </section>
+
+      <FeatureTabs index="03" eyebrow="Impact" title={tx.benefits.title} features={benefitsFeatures} inv />
+      <FeatureTabs index="04" eyebrow="Hardware" title={tx.hardware.title} subtitle={tx.hardware.subtitle} features={hardwareFeatures} flip />
+      <FeatureTabs index="05" eyebrow="Software" title={tx.software.title} subtitle={tx.software.subtitle} features={softwareFeatures} inv />
+
+      <VideoModal open={video} onClose={() => setVideo(false)} youtubeId="M0Gr6pVUz4E" title="SOTKON Intelligent Systems — Sotkis" />
     </div>
   );
 };

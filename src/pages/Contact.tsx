@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SEO } from '../components/common/SEO';
 import { seoConfig } from '../utils/seoConfig';
-import { AnimateOnScroll } from '../components/ui/AnimateOnScroll';
 import { useLanguage } from '../contexts/LanguageContext';
 import { contactTranslations } from '../translations/contact';
+import { Btn, Eyebrow } from '../components/ds/Btn';
+import { MaskHeadline, Reveal } from '../components/ds/Reveal';
+import { SignalArcs, SignalField } from '../components/ds/Signal';
 import './Contact.css';
 
 export const Contact: React.FC = () => {
   const { language } = useLanguage();
   const t = contactTranslations[language];
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: '',
     email: '',
     phone: '',
@@ -20,225 +22,111 @@ export const Contact: React.FC = () => {
     newsletter: false,
   });
 
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    console.log('Form submitted:', form);
   };
 
-  // Helper to render markdown links in privacy text
-  const renderPrivacyText = (text: string) => {
+  const renderPrivacy = (text: string) => {
     const parts = text.split(/\[(.*?)\]\((.*?)\)/g);
     if (parts.length === 1) return text;
-
     return (
       <>
         {parts[0]}
-        <a href={parts[2]} target="_blank" rel="noopener noreferrer" className="contact__privacy-link">
-          {parts[1]}
-        </a>
+        <a href={parts[2]} target="_blank" rel="noopener noreferrer">{parts[1]}</a>
         {parts[3]}
       </>
     );
   };
 
+  const field = (
+    name: 'name' | 'email' | 'phone' | 'company',
+    type: string,
+    autoComplete: string,
+    required = false
+  ) => (
+    <div className="cf__field">
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={form[name]}
+        onChange={onChange}
+        placeholder=" "
+        required={required}
+        autoComplete={autoComplete}
+      />
+      <label htmlFor={name}>{t.form[name].label}</label>
+      <span className="cf__hint">{t.form[name].placeholder}</span>
+    </div>
+  );
+
   return (
     <div className="contact">
       <SEO {...seoConfig.contact} lang={language === 'pt' ? 'pt' : 'en'} />
-      {/* Signal emission ripple animations */}
-      <div className="contact__ripples">
-<div className="contact__ripple-source-2">
-          <div className="contact__ripple-4"></div>
-          <div className="contact__ripple-5"></div>
+      <SignalField className="contact__field" />
+      <div className="contact__glow" aria-hidden="true" />
+
+      <div className="container contact__grid">
+        <div className="contact__intro">
+          <Reveal><Eyebrow className="eyebrow--inv">Sotkon Intelligent Systems</Eyebrow></Reveal>
+          <MaskHeadline as="h1" text={t.title} className="contact__title" immediate delay={150} />
+          <p className="contact__sub">{t.subtitle}</p>
+          <SignalArcs className="contact__arcs" />
         </div>
-        <div className="contact__ripple-source-3">
-          <div className="contact__ripple-6"></div>
-          <div className="contact__ripple-7"></div>
-        </div>
-        <div className="contact__ripple-source-4">
-          <div className="contact__ripple-8"></div>
-          <div className="contact__ripple-9"></div>
-        </div>
-      </div>
-      <div className="contact__container container">
-        <div className="contact__content">
-          {/* Contact Information */}
-          <div className="contact__info">
-            <div className="contact__header">
-              <p className="contact__subtitle">{t.subtitle}</p>
-              <h1 className="contact__title">{t.title}</h1>
-            </div>
-          </div>
 
-          {/* Contact Form */}
-          <AnimateOnScroll animation="fadeSlideUp" delay={300} duration={0.9}>
-            <div className="contact__form-wrapper">
-              <form className="contact__form" onSubmit={handleSubmit}>
-                <div className="contact__form-group">
-                <label htmlFor="name" className="contact__form-label">
-                  {t.form.name.label}
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="contact__form-input"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder={t.form.name.placeholder}
-                  autoComplete="name"
-                />
-              </div>
+        <Reveal className="cf" variant="up" delay={200}>
+          <form onSubmit={onSubmit} noValidate={false}>
+            <div className="cf__grid">
+              {field('name', 'text', 'name', true)}
+              {field('email', 'email', 'email', true)}
+              {field('phone', 'tel', 'tel')}
+              {field('company', 'text', 'organization')}
 
-              <div className="contact__form-group">
-                <label htmlFor="email" className="contact__form-label">
-                  {t.form.email.label}
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="contact__form-input"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder={t.form.email.placeholder}
-                  autoComplete="email"
-                />
-              </div>
-
-              <div className="contact__form-group">
-                <label htmlFor="phone" className="contact__form-label">
-                  {t.form.phone.label}
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  className="contact__form-input"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t.form.phone.placeholder}
-                  autoComplete="tel"
-                />
-              </div>
-
-              <div className="contact__form-group">
-                <label htmlFor="company" className="contact__form-label">
-                  {t.form.company.label}
-                </label>
-                <input
-                  type="text"
-                  id="company"
-                  name="company"
-                  className="contact__form-input"
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder={t.form.company.placeholder}
-                  autoComplete="organization"
-                />
-              </div>
-
-              <div className="contact__form-group contact__form-group--full">
-                <label htmlFor="service" className="contact__form-label">
-                  {t.form.service.label}
-                </label>
-                <select
-                  id="service"
-                  name="service"
-                  className="contact__form-select"
-                  value={formData.service}
-                  onChange={handleChange}
-                  required
-                  aria-label={t.form.service.placeholder}
-                >
-                  {t.form.service.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+              <div className="cf__field cf__field--full cf__field--select">
+                <select id="service" name="service" value={form.service} onChange={onChange} required>
+                  {t.form.service.options.map((o) => (
+                    <option key={o.value} value={o.value} disabled={o.value === ''}>
+                      {o.label}
                     </option>
                   ))}
                 </select>
+                <label htmlFor="service" className="is-fixed">{t.form.service.label}</label>
+                <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" /></svg>
               </div>
 
-              <div className="contact__form-group contact__form-group--full">
-                <label htmlFor="message" className="contact__form-label">
-                  {t.form.message.label}
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  className="contact__form-textarea"
-                  rows={3}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  placeholder={t.form.message.placeholder}
-                />
+              <div className="cf__field cf__field--full">
+                <textarea id="message" name="message" rows={4} value={form.message} onChange={onChange} placeholder=" " required />
+                <label htmlFor="message">{t.form.message.label}</label>
+                <span className="cf__hint">{t.form.message.placeholder}</span>
               </div>
-
-              <div className="contact__privacy-section">
-                <div className="contact__privacy-option">
-                  <input
-                    type="checkbox"
-                    id="privacyPolicy"
-                    name="privacyPolicy"
-                    checked={formData.privacyPolicy}
-                    onChange={handleChange}
-                    required
-                    className="contact__privacy-checkbox"
-                  />
-                  <label htmlFor="privacyPolicy" className="contact__privacy-label">
-                    {renderPrivacyText(t.privacy.policy)}
-                  </label>
-                </div>
-                <div className="contact__privacy-option">
-                  <input
-                    type="checkbox"
-                    id="newsletter"
-                    name="newsletter"
-                    checked={formData.newsletter}
-                    onChange={handleChange}
-                    className="contact__privacy-checkbox"
-                  />
-                  <label htmlFor="newsletter" className="contact__privacy-label">
-                    {t.privacy.newsletter}
-                  </label>
-                </div>
-              </div>
-
-              <div className="contact__form-actions">
-                <button
-                  type="submit"
-                  className="contact__form-submit"
-                  aria-label={t.form.submit}
-                >
-                  {t.form.submit}
-                </button>
-              </div>
-            </form>
             </div>
-          </AnimateOnScroll>
-        </div>
+
+            <div className="cf__checks">
+              <label className="cf__check">
+                <input type="checkbox" name="privacyPolicy" checked={form.privacyPolicy} onChange={onChange} required />
+                <span className="cf__box" aria-hidden="true" />
+                <span>{renderPrivacy(t.privacy.policy)}</span>
+              </label>
+              <label className="cf__check">
+                <input type="checkbox" name="newsletter" checked={form.newsletter} onChange={onChange} />
+                <span className="cf__box" aria-hidden="true" />
+                <span>{t.privacy.newsletter}</span>
+              </label>
+            </div>
+
+            <div className="cf__actions">
+              <Btn type="submit" variant="lime" size="lg">{t.form.submit}</Btn>
+            </div>
+          </form>
+        </Reveal>
       </div>
     </div>
   );
 };
-

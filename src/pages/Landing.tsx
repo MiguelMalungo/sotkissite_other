@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { SEO } from '../components/common/SEO';
 import { seoConfig } from '../utils/seoConfig';
-import { Link } from 'react-router-dom';
-import { WaveCanvas } from '../components/ui/WaveCanvas';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Icon } from '../components/ds/Btn';
+import { SignalField } from '../components/ds/Signal';
 import sotkisLogo from '../assets/Logo.png';
 import googleBadge from '../assets/google.webp';
 import appleBadge from '../assets/apple.webp';
@@ -73,162 +74,101 @@ const landingTranslations = {
   },
 };
 
-// Diagonal arrow icon
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="7" y1="17" x2="17" y2="7" strokeLinecap="round" strokeLinejoin="round" />
-    <polyline points="7 7 17 7 17 17" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+const FLAGS = [
+  { code: 'pt' as const, src: flagPt, alt: 'Português' },
+  { code: 'en' as const, src: flagEn, alt: 'English' },
+  { code: 'fr' as const, src: flagFr, alt: 'Français' },
+  { code: 'es' as const, src: flagEs, alt: 'Español' },
+  { code: 'gr' as const, src: flagGr, alt: 'Ελληνικά' },
+  { code: 'cr' as const, src: flagCr, alt: 'Hrvatski' },
+];
 
 export const Landing: React.FC = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const { language, setLanguage } = useLanguage();
   const t = landingTranslations[language];
 
-  const flags = [
-    { code: 'pt' as const, src: flagPt, alt: 'Português' },
-    { code: 'en' as const, src: flagEn, alt: 'English' },
-    { code: 'fr' as const, src: flagFr, alt: 'Français' },
-    { code: 'es' as const, src: flagEs, alt: 'Español' },
-    { code: 'gr' as const, src: flagGr, alt: 'Ελληνικά' },
-    { code: 'cr' as const, src: flagCr, alt: 'Hrvatski' },
-  ];
-
-  useEffect(() => {
-    // Trigger entrance animations after mount
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+  const Flags = ({ className }: { className: string }) => (
+    <div className={`lp__flags ${className}`} role="group" aria-label="Language">
+      {FLAGS.map((f) => (
+        <button
+          key={f.code}
+          className={language === f.code ? 'is-active' : ''}
+          onClick={() => setLanguage(f.code)}
+          aria-label={f.alt}
+          aria-pressed={language === f.code}
+        >
+          <img src={f.src} alt="" />
+        </button>
+      ))}
+    </div>
+  );
 
   return (
-    <div className="landing">
+    <div className="lp">
       <SEO {...seoConfig.landing} lang={language === 'pt' ? 'pt' : 'en'} />
-      <WaveCanvas />
+      <SignalField className="lp__field" />
+      <div className="lp__glow" aria-hidden="true" />
 
-      {/* Language flags - upper right corner (desktop) / below cards (mobile) */}
-      <div className="landing__flags landing__flags--top">
-        {flags.map((flag) => (
-          <button
-            key={flag.code}
-            className={`landing__flag ${language === flag.code ? 'landing__flag--selected' : ''}`}
-            onClick={() => setLanguage(flag.code)}
-            aria-label={flag.alt}
+      <header className="lp__top">
+        <span className="lp__meta">Sotkon Intelligent Systems</span>
+        <Flags className="lp__flags--top" />
+      </header>
+
+      <div className="lp__center">
+        <img src={sotkisLogo} alt="SOTKIS — intelligent systems" className="lp__logo" />
+
+        <nav className="lp__rows">
+          <Link to="/home" className="lp__row" style={{ '--i': 0 } as React.CSSProperties}>
+            <span className="lp__idx">01</span>
+            <span className="lp__text">
+              <span className="lp__title">{t.visitWebsite}</span>
+              <span className="lp__desc">{t.visitDescription}</span>
+            </span>
+            <span className="lp__action">
+              <span className="lp__action-label">{t.exploreButton}</span>
+              <span className="lp__circle"><Icon name="arrow" /></span>
+            </span>
+          </Link>
+
+          <a
+            href="https://miguelmalungo.github.io/sotkis/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="lp__row"
+            style={{ '--i': 1 } as React.CSSProperties}
           >
-            <img src={flag.src} alt={flag.alt} />
-          </button>
-        ))}
-      </div>
+            <span className="lp__idx">02</span>
+            <span className="lp__text">
+              <span className="lp__title">{t.accessPlatform}</span>
+              <span className="lp__desc">{t.accessDescription}</span>
+            </span>
+            <span className="lp__action">
+              <span className="lp__action-label">{t.loginButton}</span>
+              <span className="lp__circle"><Icon name="out" /></span>
+            </span>
+          </a>
 
-      {/* Logo - Centered above cards */}
-      <div className={`landing__logo-container ${isLoaded ? 'landing__logo-container--visible' : ''}`}>
-        <img
-          src={sotkisLogo}
-          alt="SOTKIS - Intelligent Systems"
-          className="landing__logo"
-        />
-      </div>
-
-      {/* Cards Section */}
-      <div className={`landing__cards ${isLoaded ? 'landing__cards--visible' : ''}`}>
-
-        {/* Card 1: Visit Website */}
-        <Link
-          to="/home"
-          className="landing__card landing__card--website"
-          style={{ '--card-delay': '0.2s' } as React.CSSProperties}
-        >
-          <div className="landing__card-bg" />
-          <div className="landing__card-expand" />
-          <div className="landing__card-border" />
-          <div className="landing__card-content">
-            <div className="landing__card-text">
-              <h2 className="landing__card-title">{t.visitWebsite}</h2>
-              <p className="landing__card-description">
-                {t.visitDescription}
-              </p>
-            </div>
-          </div>
-          <div className="landing__card-arrow">
-            <span className="landing__card-arrow-label">{t.exploreButton}</span>
-            <ArrowIcon />
-          </div>
-          <div className="landing__card-shine" />
-        </Link>
-
-        {/* Card 2: Platform Login */}
-        <a
-          href="https://miguelmalungo.github.io/sotkis/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="landing__card landing__card--platform"
-          style={{ '--card-delay': '0.4s' } as React.CSSProperties}
-        >
-          <div className="landing__card-bg" />
-          <div className="landing__card-expand" />
-          <div className="landing__card-border" />
-          <div className="landing__card-content">
-            <div className="landing__card-text">
-              <h2 className="landing__card-title">{t.accessPlatform}</h2>
-              <p className="landing__card-description">
-                {t.accessDescription}
-              </p>
-            </div>
-          </div>
-          <div className="landing__card-arrow">
-            <span className="landing__card-arrow-label">{t.loginButton}</span>
-            <ArrowIcon />
-          </div>
-          <div className="landing__card-shine" />
-        </a>
-
-        {/* Card 3: Download App - Title and badges inline */}
-        <div
-          className="landing__card landing__card--app"
-          style={{ '--card-delay': '0.6s' } as React.CSSProperties}
-        >
-          <div className="landing__card-bg" />
-          <div className="landing__card-border" />
-          <div className="landing__card-content">
-            <div className="landing__card-text">
-              <h2 className="landing__card-title">{t.downloadApp}</h2>
-            </div>
-            <div className="landing__card-badges">
-              <a
-                href="https://play.google.com/store"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="landing__badge"
-              >
+          <div className="lp__row lp__row--app" style={{ '--i': 2 } as React.CSSProperties}>
+            <span className="lp__idx">03</span>
+            <span className="lp__text">
+              <span className="lp__title">{t.downloadApp}</span>
+            </span>
+            <span className="lp__badges">
+              <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">
                 <img src={googleBadge} alt="Google Play" />
               </a>
-              <a
-                href="https://apps.apple.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="landing__badge"
-              >
+              <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer">
                 <img src={appleBadge} alt="App Store" />
               </a>
-            </div>
+            </span>
           </div>
-          <div className="landing__card-shine" />
-        </div>
+        </nav>
       </div>
 
-      {/* Language flags - below cards (mobile only) */}
-      <div className="landing__flags landing__flags--bottom">
-        {flags.map((flag) => (
-          <button
-            key={flag.code}
-            className={`landing__flag ${language === flag.code ? 'landing__flag--selected' : ''}`}
-            onClick={() => setLanguage(flag.code)}
-            aria-label={flag.alt}
-          >
-            <img src={flag.src} alt={flag.alt} />
-          </button>
-        ))}
-      </div>
+      <footer className="lp__bottom">
+        <Flags className="lp__flags--bottom" />
+        <span className="lp__meta">© {new Date().getFullYear()} SOTKON</span>
+      </footer>
     </div>
   );
 };

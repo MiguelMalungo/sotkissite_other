@@ -8,17 +8,16 @@ export const Layout: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [location.pathname]);
 
   return (
     <div className="layout">
       <Header />
-      <main className="layout__main">
+      <main className="layout__main" key={location.pathname}>
         <Outlet />
       </main>
       <Footer />
     </div>
   );
 };
-

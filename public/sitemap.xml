@@ -6,7 +6,7 @@
 
   <!-- Landing page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Home / Main page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/home</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/home</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -22,7 +22,7 @@
 
   <!-- Platform Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/platform</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/platform</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -30,7 +30,7 @@
 
   <!-- Access Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/access</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/access</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -38,7 +38,7 @@
 
   <!-- Level Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/level</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/level</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -46,7 +46,7 @@
 
   <!-- DRS Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/drs</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/drs</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -54,7 +54,7 @@
 
   <!-- Paylt Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/paylt</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/paylt</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -62,7 +62,7 @@
 
   <!-- Trash4Goods Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/trash4goods</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/trash4goods</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -70,7 +70,7 @@
 
   <!-- Mobile App Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/mobile-app</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/mobile-app</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -78,7 +78,7 @@
 
   <!-- Contact Page -->
   <url>
-    <loc>https://miguelmalungo.github.io/sotkissite/contact</loc>
+    <loc>https://miguelmalungo.github.io/sotkissite_other/contact</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

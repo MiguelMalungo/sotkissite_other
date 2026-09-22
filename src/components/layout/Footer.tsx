@@ -1,92 +1,99 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { footerTranslations } from '../../translations/footer';
+import { contactTranslations } from '../../translations/contact';
+import { Icon } from '../ds/Btn';
+import { MaskHeadline, Reveal } from '../ds/Reveal';
+import { SignalArcs } from '../ds/Signal';
 import logoImage from '../../assets/logotipo-sotkon-neg-preto.webp';
 import './Footer.css';
 
 export const Footer: React.FC = () => {
   const { language } = useLanguage();
   const t = footerTranslations[language];
-  const currentYear = new Date().getFullYear();
+  const c = contactTranslations[language];
+  const { pathname } = useLocation();
+  const year = new Date().getFullYear();
+  const showCta = pathname !== '/contact';
 
   return (
-    <footer className="footer">
-      <div className="footer__container container">
-        <div className="footer__content">
-          {/* Left Column: Brand Section */}
-          <div className="footer__section footer__section--brand">
-            <a href="https://sotkon.com" target="_blank" rel="noopener noreferrer" className="footer__logo-link">
-              <img
-                src={logoImage}
-                alt="Sotkon"
-                className="footer__logo-image"
-              />
+    <footer className="ftr">
+      {showCta && (
+        <Link to="/contact" className="ftr__cta">
+          <div className="container ftr__cta-inner">
+            <Reveal className="ftr__cta-sub">
+              <SignalArcs className="ftr__cta-arcs" />
+              <span>{c.subtitle}</span>
+            </Reveal>
+            <div className="ftr__cta-row">
+              <MaskHeadline text={c.title} className="ftr__cta-title" />
+              <span className="ftr__cta-circle" aria-hidden="true">
+                <Icon name="out" />
+              </span>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      <div className="container ftr__grid">
+        <div className="ftr__brand">
+          <a href="https://sotkon.com" target="_blank" rel="noopener noreferrer" className="ftr__logo">
+            <img src={logoImage} alt="Sotkon waste systems" />
+          </a>
+          <p className="ftr__tag">{t.description}</p>
+          <div className="ftr__social">
+            <a href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.1 0 2.24.19 2.24.19v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" /></svg>
             </a>
-            <p className="footer__description">
-              {t.description}
-            </p>
-            <div className="footer__social-icons">
-              <a href="#" aria-label="Facebook" className="footer__social-icon footer__social-icon--facebook">
-                <svg width="23.4" height="23.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22 12C22 6.477 17.523 2 12 2S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898v-2.89h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.991 22 12Z" fill="currentColor" />
-                </svg>
-              </a>
-              <a href="#" aria-label="YouTube" className="footer__social-icon footer__social-icon--youtube">
-                <svg width="23.4" height="23.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21.8 8.001a2.504 2.504 0 0 0-1.758-1.777C18.073 6 12 6 12 6s-6.073 0-8.042.224A2.504 2.504 0 0 0 2.2 8.001 26.135 26.135 0 0 0 2 12c-.003 1.33.124 2.659.374 3.978a2.504 2.504 0 0 0 1.758 1.777C5.927 18 12 18 12 18s6.073 0 8.042-.224a2.504 2.504 0 0 0 1.758-1.777c.25-1.319.377-2.648.374-3.978.003-1.33-.124-2.659-.374-3.978ZM10 14.5v-5l4.5 2.5-4.5 2.5Z" fill="currentColor" />
-                </svg>
-              </a>
-              <a href="#" aria-label="LinkedIn" className="footer__social-icon footer__social-icon--linkedin">
-                <svg width="23.4" height="23.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.554V9h3.414v1.561h.048c.476-.898 1.637-1.85 3.37-1.85 3.601 0 4.266 2.372 4.266 5.456v6.285ZM5.337 7.433c-1.144 0-2.07-.926-2.07-2.07 0-1.143.926-2.07 2.07-2.07 1.142 0 2.068.927 2.068 2.07 0 1.144-.926 2.07-2.068 2.07ZM7.114 20.452H3.56V9h3.554v11.452Z" fill="currentColor" />
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          {/* Middle Column: Products */}
-          <div className="footer__section footer__section--products">
-            <h4 className="footer__title">{t.products.title}</h4>
-            <ul className="footer__links">
-              {t.products.links.map((link, index) => (
-                <li key={index}><Link to={link.path} className="footer__link">{link.label}</Link></li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right Column: Newsletter */}
-          <div className="footer__section footer__section--newsletter">
-            <div className="footer__newsletter">
-              <h4 className="footer__newsletter-title">{t.newsletter.title}</h4>
-              <form className="footer__newsletter-form">
-                <input
-                  type="email"
-                  placeholder={t.newsletter.placeholder}
-                  className="footer__newsletter-input"
-                />
-                <button type="submit" className="footer__newsletter-button">
-                  {t.newsletter.button}
-                </button>
-              </form>
-              <p className="footer__newsletter-note">
-                {t.newsletter.note}
-              </p>
-              <div className="footer__legal footer__legal--column">
-                <a href={t.privacyPolicy.url} className="footer__link" target="_blank" rel="noopener noreferrer">
-                  {t.privacyPolicy.label}
-                </a>
-              </div>
-            </div>
+            <a href="#" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><path d="M21.8 8a2.5 2.5 0 0 0-1.76-1.78C18.07 6 12 6 12 6s-6.07 0-8.04.22A2.5 2.5 0 0 0 2.2 8 26 26 0 0 0 2 12a26 26 0 0 0 .2 4 2.5 2.5 0 0 0 1.76 1.78C5.93 18 12 18 12 18s6.07 0 8.04-.22A2.5 2.5 0 0 0 21.8 16a26 26 0 0 0 .2-4 26 26 0 0 0-.2-4ZM10 14.5v-5l4.5 2.5-4.5 2.5Z" /></svg>
+            </a>
+            <a href="#" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.11 20.45H3.56V9h3.55v11.45Z" /></svg>
+            </a>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="footer__bottom">
-          <p className="footer__copyright">
-            © {currentYear} {t.copyright} <a href="https://sotkon.com" className="footer__link" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 400 }}>SOTKON</a>
-          </p>
+        <nav className="ftr__col" aria-label={t.products.title}>
+          <h4 className="ftr__h">{t.products.title}</h4>
+          <ul>
+            {t.products.links.map((l, i) => (
+              <li key={i}>
+                <Link to={l.path}>
+                  <span className="ftr__idx">{String(i + 1).padStart(2, '0')}</span>
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="ftr__col ftr__news">
+          <h4 className="ftr__h">{t.newsletter.title}</h4>
+          <form className="ftr__form" onSubmit={(e) => e.preventDefault()}>
+            <label className="sr-only" htmlFor="ftr-email">{t.newsletter.placeholder}</label>
+            <input id="ftr-email" type="email" placeholder={t.newsletter.placeholder} required />
+            <button type="submit">
+              {t.newsletter.button}
+              <Icon name="arrow" />
+            </button>
+          </form>
+          <p className="ftr__note">{t.newsletter.note}</p>
         </div>
+      </div>
+
+      <div className="ftr__mark" aria-hidden="true">sotkis</div>
+
+      <div className="container ftr__bottom">
+        <span>
+          © {year} {t.copyright}{' '}
+          <a href="https://sotkon.com" target="_blank" rel="noopener noreferrer">SOTKON</a>
+        </span>
+        <a href={t.privacyPolicy.url} target="_blank" rel="noopener noreferrer">{t.privacyPolicy.label}</a>
+        <button className="ftr__top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top">
+          <svg viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6" /></svg>
+        </button>
       </div>
     </footer>
   );
