@@ -6,6 +6,7 @@ import { contactTranslations } from '../../translations/contact';
 import { Icon } from '../ds/Btn';
 import { MaskHeadline, Reveal } from '../ds/Reveal';
 import { SignalArcs } from '../ds/Signal';
+import { SotkisMark } from '../ds/SotkisMark';
 import logoImage from '../../assets/logotipo-sotkon-neg-preto.webp';
 import './Footer.css';
 
@@ -83,7 +84,9 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="ftr__mark" aria-hidden="true">sotkis</div>
+      <div className="ftr__mark container" aria-hidden="true">
+        <SotkisMark />
+      </div>
 
       <div className="container ftr__bottom">
         <span>

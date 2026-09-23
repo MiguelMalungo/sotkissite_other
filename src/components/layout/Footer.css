@@ -139,22 +139,28 @@
 .ftr__form button svg { width: 16px; height: 16px; }
 .ftr__note { margin-top: 1.2rem; font-size: 0.82rem; line-height: 1.6; color: var(--text-inv-3); max-width: 52ch; }
 
-/* ---------- Wordmark ---------- */
+/* ---------- Logo mark — outlined, fading lime fill, pulsing signal ---------- */
 .ftr__mark {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(7rem, 31vw, 30rem);
-  line-height: 0.78;
-  letter-spacing: -0.075em;
-  text-align: center;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(238, 242, 234, 0.14);
-  background: linear-gradient(180deg, rgba(148, 193, 31, 0.16), rgba(148, 193, 31, 0) 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  margin-bottom: -0.06em;
+  padding-top: clamp(1rem, 3vw, 2.5rem);
+  padding-bottom: clamp(1.5rem, 3vw, 3rem);
   user-select: none;
-  white-space: nowrap;
+  pointer-events: none;
+}
+.ftr__mark .sotkis-mark { display: block; width: 100%; height: auto; overflow: visible; }
+.sotkis-mark path {
+  stroke: rgba(238, 242, 234, 0.16);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+.sotkis-mark__stop-a { stop-color: var(--lime); stop-opacity: 0.18; }
+.sotkis-mark__stop-b { stop-color: var(--lime); stop-opacity: 0; }
+.sotkis-mark__dot, .sotkis-mark__arc { animation: mark-signal 2.8s var(--ease-in-out) infinite; }
+.sotkis-mark__arc--1 { animation-delay: 0.25s; }
+.sotkis-mark__arc--2 { animation-delay: 0.5s; }
+@keyframes mark-signal {
+  0%, 100% { stroke: rgba(238, 242, 234, 0.16); }
+  40% { stroke: rgba(148, 193, 31, 0.85); }
 }
 
 .ftr__bottom {
