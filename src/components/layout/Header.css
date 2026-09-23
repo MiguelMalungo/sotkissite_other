@@ -16,8 +16,8 @@
   gap: 1.5rem;
   max-width: calc(var(--container) + 2rem);
   margin: 0 auto;
-  height: 64px;
-  padding: 0 0.5rem 0 1.25rem;
+  height: 96px;
+  padding: 0 0.75rem 0 1.75rem;
   border-radius: var(--r-pill);
   color: var(--text-inv);
   background: rgba(10, 21, 16, 0);
@@ -32,7 +32,7 @@
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
 
-.hdr__logo img { height: 38px; width: auto; transition: transform 0.5s var(--ease-out); }
+.hdr__logo img { height: 76px; width: auto; transition: transform 0.5s var(--ease-out); }
 .hdr__logo:hover img { transform: scale(1.04); }
 
 .hdr__nav ul { display: flex; list-style: none; gap: 0.25rem; }
@@ -224,11 +224,11 @@
   z-index: 1020;
   background: var(--ink);
   color: var(--text-inv);
-  clip-path: circle(0% at calc(100% - 3rem) 3rem);
+  clip-path: circle(0% at calc(100% - 3.5rem) 4rem);
   transition: clip-path 0.9s var(--ease-in-out);
   overflow-y: auto;
 }
-.mnav.is-open { clip-path: circle(150% at calc(100% - 3rem) 3rem); }
+.mnav.is-open { clip-path: circle(150% at calc(100% - 3.5rem) 4rem); }
 .mnav__inner {
   min-height: 100%;
   display: flex;
@@ -288,7 +288,7 @@
 }
 @media (max-width: 560px) {
   .hdr { padding: 0.75rem 0.75rem; }
-  .hdr__bar { height: 60px; padding-left: 1rem; }
-  .hdr__logo img { height: 32px; }
+  .hdr__bar { height: 80px; padding-left: 1.25rem; }
+  .hdr__logo img { height: 64px; }
   .hdr__cta { display: none; }
 }

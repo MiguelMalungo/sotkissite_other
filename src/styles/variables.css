@@ -53,7 +53,7 @@
   --container: 1360px;
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section: clamp(5.5rem, 11vw, 10rem);
-  --header-h: 84px;
+  --header-h: 116px;
 
   --r-sm: 10px;
   --r-md: 18px;
@@ -86,4 +86,8 @@
   --radius-full: var(--r-pill);
   --z-fixed: 1030;
   --z-modal: 1050;
+}
+
+@media (max-width: 560px) {
+  :root { --header-h: 96px; }
 }
