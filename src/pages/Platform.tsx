@@ -160,15 +160,19 @@ export const Platform: React.FC = () => {
 
       {/* ---------------- APP ---------------- */}
       <section className="plapp">
-        <video className="plapp__video" src={appVideo} autoPlay loop muted playsInline preload="metadata" />
-        <div className="plapp__scrim" />
-        <div className="container plapp__inner">
-          <Reveal><Eyebrow index="04" className="eyebrow--inv">App SOTKIS</Eyebrow></Reveal>
-          <MaskHeadline text={homeT.app.title} className="plapp__title" />
-          <Reveal as="p" className="plapp__text" delay={150}>{homeT.app.description}</Reveal>
-          <Reveal delay={250}>
-            <StoreBadges apple={appleImage} google={googleImage} />
+        <div className="container plapp__grid">
+          {/* The phone lives in the left third of the video — frame it so it never sits under the copy */}
+          <Reveal className="plapp__media" variant="scale">
+            <video className="plapp__video" src={appVideo} autoPlay loop muted playsInline preload="metadata" />
           </Reveal>
+          <div className="plapp__copy">
+            <Reveal><Eyebrow index="04" className="eyebrow--inv">App SOTKIS</Eyebrow></Reveal>
+            <MaskHeadline text={homeT.app.title} className="plapp__title" />
+            <Reveal as="p" className="plapp__text" delay={150}>{homeT.app.description}</Reveal>
+            <Reveal delay={250}>
+              <StoreBadges apple={appleImage} google={googleImage} />
+            </Reveal>
+          </div>
         </div>
       </section>
 
